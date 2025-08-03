@@ -132,7 +132,7 @@ select {
 }
 
 #idCard img {
-  width: 0.9in;
+  width: 1in;
   height: 1in;
   object-fit: cover;
   border-radius: 4px;
@@ -167,19 +167,21 @@ select {
 
 
 #qr {
-  width: 1in;
-  height: 1in;
+  width: 1.1in;
+  height: 1.1in;
   display: flex;
   justify-content: center;
   align-items: center;
   position: absolute;
-  bottom: 0.125in;
-  right: 0.125in;
+  bottom: 0.05in;  /* 👈 Push closer to bottom edge */
+  right: 0.05in;   /* 👈 Push closer to right edge */
+  z-index: 10;     /* Ensure it sits above other elements */
 }
 
+
 #qr canvas {
-  width: 1in !important;
-  height: 1in !important;
+  width: 1.1in !important;
+  height: 1.1in !important;
   border-radius: 8px;
   image-rendering: pixelated;
   border: 1px solid #ccc;
@@ -404,16 +406,16 @@ footer {
 </p>
 
 
-
 <button onclick="showForm()">Create ID Card</button>
 </div>
 </div>
 
 <script>
   function showForm() {
-    // your existing logic to show the form...
+    document.getElementById("introScreen").style.display = "none";
+    document.getElementById("formScreen").style.display = "block";
 
-    // Smooth scroll to top
+    // ✅ Smooth scroll to top
     window.scrollTo({
       top: 0,
       behavior: "smooth"
@@ -422,29 +424,30 @@ footer {
 </script>
 
 
+
 <div id="formSection" class="container hidden">
   <h2>Enter Your Information</h2>
 
   <div class="form-group">
   <label for="name">Full Name <span style="color: red;">*</span></label>
-  <input type="text" id="name" maxlength="30" placeholder="Enter full name (max 30 characters)" />
+  <input type="text" id="name" maxlength="30" placeholder="Enter full name (max 30 characters)" required />
   <small id="nameCount">0/30</small>
 </div>
 
   <div class="form-group">
     <label for="dob">Date of Birth <span style="color: red;">*</span></label>
-    <input type="date" id="dob" />
+    <input type="date" id="dob" required />
   </div>
 
   <div class="form-group">
   <label for="institution">Institution Name <span style="color: red;">*</span></label>
-  <input type="text" id="institution" maxlength="42" placeholder="Enter institution (max 42 characters)" />
-  <small id="instCount">0/42</small>
+  <input type="text" id="institution" maxlength="42" placeholder="Enter institution (max 40 characters)" required />
+  <small id="instCount">0/40</small>
 </div>
 
   <div class="form-group">
     <label for="blood">Blood Group <span style="color: red;">*</span></label>
-    <select id="blood">
+    <select id="blood" required>
       <option value="">Select</option>
       <option>A+</option><option>A-</option>
       <option>B+</option><option>B-</option>
@@ -455,7 +458,7 @@ footer {
 
   <div class="form-group">
     <label for="gender">Gender <span style="color: red;">*</span></label>
-    <select id="gender">
+    <select id="gender" required>
       <option value="">Select</option>
       <option>Male</option>
       <option>Female</option>
@@ -465,7 +468,7 @@ footer {
 
   <div class="form-group-nationality">
   <label for="nationality">Nationality <span style="color: red;">*</span></label>
-  <select id="nationality">
+ <select id="nationality" required>
     <option value="">Select Country</option>
     <option value="Afghanistan">Afghanistan</option>
     <option value="Albania">Albania</option>
@@ -697,7 +700,8 @@ footer {
   </div>
 <div class="form-group">
   <label for="address">Address <span style="color: red;">*</span></label>
-  <textarea id="address" rows="3" placeholder="e.g., Brooklyn, New York 11201, USA"></textarea>
+  <textarea id="address" rows="3" maxlength="60" placeholder="e.g., Brooklyn, New York 11201, USA" required></textarea>
+  <small id="addressCount">0/60</small>
   <small style="color: #666; display: block; margin-top: 5px;">
     For privacy and safety, please provide only general location details such as <strong>area, city, state, and postal code</strong>. Avoid including specific identifiers like <strong>house numbers, road names, or building names</strong>, as this information may be visible to others if the ID is scanned.
   </small>
@@ -706,7 +710,7 @@ footer {
 
 <div class="form-group" style="position: relative;">
   <label for="photo">Select Photo <span style="color: red;">*</span></label>
-  <input type="file" accept="image/*" id="photo" />
+  <input type="file" accept="image/*" id="photo" required />
   <img id="imagePreview" />
   <button id="cropBtn" type="button">Crop</button>
   <span id="cropNotice">Image added to ID card.</span>
@@ -719,6 +723,7 @@ footer {
 
 
   <button onclick="generateID()">Generate ID Card</button>
+
 
 
 
@@ -1397,11 +1402,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-
   const nameInput = document.getElementById('name');
   const institutionInput = document.getElementById('institution');
   const nameCount = document.getElementById('nameCount');
   const instCount = document.getElementById('instCount');
+  const addressInput = document.getElementById("address");
+const addressCount = document.getElementById("addressCount");
 
   if (nameInput && nameCount) {
     nameInput.addEventListener('input', function () {
@@ -1411,10 +1417,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
   if (institutionInput && instCount) {
     institutionInput.addEventListener('input', function () {
-      instCount.textContent = `${this.value.length}/42`;
+      instCount.textContent = `${this.value.length}/40`;
     });
   }
+
+  if (addressInput && addressCount) {
+  addressInput.addEventListener("input", function () {
+    addressCount.textContent = `${this.value.length}/60`;
+  });
+}
 });
+
+
  imageCropped = false;
 
 let cropper;
@@ -1451,6 +1465,8 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll('.country-code').forEach(select => {
     select.innerHTML = countryOptions;
   });
+
+  
 
   const extraContacts = ["brother", "sister", "uncle", "aunty"];
   const labels = {
@@ -1526,8 +1542,10 @@ imageCropped = true;
 });
 
   // === Validation and Generate Button Control ===
-  const generateBtn = document.querySelector('button[onclick="generateID()"]');
-  generateBtn.style.display = "none"; // hide initially
+const generateBtn = document.querySelector('button[onclick="generateID()"]');
+generateBtn.style.display = "none";
+
+
 
   // List all required field IDs
 const requiredFields = [
@@ -1693,7 +1711,16 @@ document.getElementById("newIDBtn").onclick = () => {
   finalPhoto.src = "";
 
   // Scroll to top smoothly
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  function showForm() {
+    document.getElementById("introScreen").style.display = "none";
+    document.getElementById("formScreen").style.display = "block";
+
+    // ✅ Smooth scroll to top
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
 
   // Show form section and hide intro if hidden
   document.getElementById("formSection").classList.remove("hidden");
@@ -1907,9 +1934,17 @@ document.getElementById("printBtn").onclick = () => {
     document.getElementById("outGender").textContent = gender || "-";
     
 
+function formatIssuedDate() {
+  const now = new Date();
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return now.toLocaleDateString(undefined, options); // e.g., August 3, 2025
+}
+
+
+
 
     // Prepare QR text with all details, nicely formatted
-    let qrText = `Name: ${name || "-"}
+let qrText = `Name: ${name || "-"}
 DOB: ${dob || "-"}
 Institution: ${institution || "-"}
 Blood Group: ${blood || "-"}
@@ -1918,13 +1953,25 @@ Nationality: ${nationality || "-"}
 Address: ${address || "-"}
 
 Emergency Contacts:
-Mother: ${contacts.mother}
 Father: ${contacts.father}
-Brother: ${contacts.brother}
-Sister: ${contacts.sister}
-Uncle: ${contacts.uncle}
-Aunty: ${contacts.aunty}
-`;
+Mother: ${contacts.mother}`;
+// Append optional contacts only if provided
+["brother", "sister", "uncle", "aunty"].forEach(relation => {
+  if (contacts[relation] && contacts[relation] !== "N/A") {
+    qrText += `\n${capitalize(relation)}: ${contacts[relation]}`;
+  }
+});
+
+// Add issued date
+qrText += `\n\nID Issued on: ${formatIssuedDate()}\n`;
+const currentYear = new Date().getFullYear();
+qrText += `\n© ${currentYear} https://instantidcard.vercel.app/`;
+
+
+function capitalize(word) {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
 
    // Assuming qrText contains the data to encode in the QR
 if (!qrText) {
@@ -1938,14 +1985,13 @@ const qrContainer = document.getElementById("qr");
 qrContainer.innerHTML = "";
 
 const canvas = document.createElement("canvas");
-canvas.width = 240;    // Set canvas bitmap width
-canvas.height = 240
+canvas.width = 330;    // Render high-res internally
+canvas.height = 330;
 
-// Generate QR code with high quality
 QRCode.toCanvas(canvas, qrText, {
-  width: 240, // ~1in at 240dpi for print-ready sizing
-  margin: 2,
-  errorCorrectionLevel: 'L'
+  width: 264, // 1.1in at 240 DPI
+  margin: 1,
+  errorCorrectionLevel: 'Q'
 }, function (error) {
   if (error) {
     console.error("QR Generation Failed:", error);
@@ -1953,14 +1999,15 @@ QRCode.toCanvas(canvas, qrText, {
     return;
   }
 
-  // Style the canvas for printing
+  // Final QR styling
   canvas.style.border = "1px solid #ccc";
   canvas.style.borderRadius = "8px";
   canvas.style.padding = "2px";
   canvas.style.backgroundColor = "#fff";
-  canvas.style.width = "1in";
-  canvas.style.height = "1in";
+  canvas.style.width = "1.1in";
+  canvas.style.height = "1.1in";
   canvas.style.imageRendering = "pixelated";
+  canvas.style.display = "block";
 
   qrContainer.appendChild(canvas);
 });
