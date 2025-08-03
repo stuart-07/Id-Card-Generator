@@ -405,9 +405,22 @@ footer {
 
 
 
-    <button onclick="showForm()">Create ID Card</button>
-  </div>
+<button onclick="showForm()">Create ID Card</button>
 </div>
+</div>
+
+<script>
+  function showForm() {
+    // your existing logic to show the form...
+
+    // Smooth scroll to top
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+</script>
+
 
 <div id="formSection" class="container hidden">
   <h2>Enter Your Information</h2>
@@ -734,6 +747,7 @@ footer {
 
   <div id="actionButtons" style="margin-top: 20px; display: none;">
     <button id="downloadBtn">Download PNG</button>
+    <button id="pdfBtn">Download PDF</button>
     <button id="printBtn">Print ID Card</button>
     <button id="newIDBtn">Generate New ID</button>
 
@@ -786,6 +800,8 @@ footer {
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.13/dist/cropper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 
 
 <script>
@@ -1038,6 +1054,9 @@ footer {
     </div>
   `;
 }
+
+
+
 
 
 
@@ -1372,6 +1391,13 @@ function validatePhone(codeSelect, phoneInput) {
 
   
 document.addEventListener("DOMContentLoaded", function () {
+
+
+  
+
+
+
+
   const nameInput = document.getElementById('name');
   const institutionInput = document.getElementById('institution');
   const nameCount = document.getElementById('nameCount');
@@ -1678,6 +1704,117 @@ document.getElementById("newIDBtn").onclick = () => {
   generateBtn.style.display = "none";
 };
 
+document.getElementById("pdfBtn").onclick = () => {
+  const idCard = document.getElementById("idCard");
+
+  html2canvas(idCard, {
+    scale: 3,
+    useCORS: true,
+    backgroundColor: "#ffffff"
+  }).then(canvas => {
+    const imgData = canvas.toDataURL("image/png");
+
+    // Create A4 portrait PDF (210mm x 297mm)
+    const pdf = new window.jspdf.jsPDF("p", "in", "a4");
+
+    // ID card dimensions in inches (CR80 size)
+    const cardWidth = 3.375;
+    const cardHeight = 2.125;
+    const pageWidth = 8.27;  // A4 width in inches
+    const cardX = (pageWidth - cardWidth) / 2;
+    const cardY = 1.2;
+
+    // Add the ID card image centered
+    pdf.addImage(imgData, "PNG", cardX, cardY, cardWidth, cardHeight);
+
+    // Draw a dotted border rectangle around the ID card for cutting guide
+    pdf.setDrawColor(255, 0, 0); // Red border
+    pdf.setLineWidth(0.02);
+
+    const dashLength = 0.05;
+    const gapLength = 0.03;
+
+    // Top border
+    let xStart = cardX;
+    let yTop = cardY;
+    while (xStart < cardX + cardWidth) {
+      const dashEnd = Math.min(xStart + dashLength, cardX + cardWidth);
+      pdf.line(xStart, yTop, dashEnd, yTop);
+      xStart += dashLength + gapLength;
+    }
+
+    // Bottom border
+    xStart = cardX;
+    let yBottom = cardY + cardHeight;
+    while (xStart < cardX + cardWidth) {
+      const dashEnd = Math.min(xStart + dashLength, cardX + cardWidth);
+      pdf.line(xStart, yBottom, dashEnd, yBottom);
+      xStart += dashLength + gapLength;
+    }
+
+    // Left border
+    let yStart = cardY;
+    let xLeft = cardX;
+    while (yStart < cardY + cardHeight) {
+      const dashEnd = Math.min(yStart + dashLength, cardY + cardHeight);
+      pdf.line(xLeft, yStart, xLeft, dashEnd);
+      yStart += dashLength + gapLength;
+    }
+
+    // Right border
+    yStart = cardY;
+    let xRight = cardX + cardWidth;
+    while (yStart < cardY + cardHeight) {
+      const dashEnd = Math.min(yStart + dashLength, cardY + cardHeight);
+      pdf.line(xRight, yStart, xRight, dashEnd);
+      yStart += dashLength + gapLength;
+    }
+
+    // Add "Cut here" labels around the box
+    pdf.setFontSize(10);
+    pdf.setTextColor(255, 0, 0);
+    const labelText = "Cut here";
+    const horizontalLabelDistance = 0.18; // top and bottom
+const leftLabelDistance = 0.02;       // move left text closer
+const rightLabelDistance = 0.40;
+
+    // Top center
+    pdf.text(labelText, cardX + cardWidth / 2, cardY - horizontalLabelDistance, { align: "center" });
+    // Bottom center
+    pdf.text(labelText, cardX + cardWidth / 2, cardY + cardHeight + horizontalLabelDistance, { align: "center" });
+    // Left center (rotated counter-clockwise)
+    pdf.text(labelText, cardX - leftLabelDistance, cardY + cardHeight / 2, { angle: 90, align: "center" });
+    // Right center (rotated clockwise)
+    pdf.text(labelText, cardX + cardWidth + rightLabelDistance, cardY + cardHeight / 2, { angle: -90, align: "center" });
+
+    // Add enhanced print instructions
+    const instructions = `
+IMPORTANT PRINTING INSTRUCTIONS:
+
+- This PDF contains a CR80 size ID card image (3.375 × 2.125 inches).
+- This PDF is designed for A4 paper only.
+- If you cannot print on actual ID cards, you can print this on paper as an alternative.
+- When printing, select “Actual Size” or “100%” scaling in the print dialog.
+- Do NOT select “Fit to page”, “Shrink to fit”, or “Fit to printable area”.
+- Set margins to “None” or “Minimum” if available.
+- Use high quality photo paper or thick cardstock for best results.
+- Allow the print to dry completely before cutting.
+- Use the red dotted border and "Cut here" labels as a guide.
+- Cut carefully along the red dotted border using scissors or a precision cutter.
+- If available, use a transparent CR80 card as a cutting template.
+
+Thank you for printing carefully.
+
+© 2025. All rights reserved.
+    `.trim();
+
+    pdf.setFontSize(10);
+    pdf.setTextColor(40);
+    pdf.text(instructions, 0.7, cardY + cardHeight + 1.0, { maxWidth: pageWidth - 1.4 });
+
+    pdf.save("ID_Card.pdf");
+  });
+};
 
 // Setup print button
 document.getElementById("printBtn").onclick = () => {
@@ -1807,8 +1944,8 @@ canvas.height = 240
 // Generate QR code with high quality
 QRCode.toCanvas(canvas, qrText, {
   width: 240, // ~1in at 240dpi for print-ready sizing
-  margin: 0,
-  errorCorrectionLevel: 'H'
+  margin: 2,
+  errorCorrectionLevel: 'L'
 }, function (error) {
   if (error) {
     console.error("QR Generation Failed:", error);
