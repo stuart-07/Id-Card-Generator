@@ -424,6 +424,35 @@ footer {
   display: none !important;
 }
 
+#termsModal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+#termsModal > div {
+  background: white;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+
+#termsModal > #termsContent {
+  max-height: 90vh;
+  overflow-y: auto;
+}
 
 @media (max-width: 480px) {
   .container {
@@ -540,7 +569,10 @@ footer {
       cursor: pointer;
     ">Close</button>
   </div>
+
+  
 </div>
+
 <script>
   function showTermsModal() {
     document.getElementById("termsModal").classList.remove("hidden");
@@ -549,6 +581,18 @@ footer {
   function closeTermsModal() {
     document.getElementById("termsModal").classList.add("hidden");
   }
+
+  function showTermsModal() {
+  const modal = document.getElementById('termsModal');
+  const modalContent = modal.querySelector('div');
+
+  
+  modal.classList.remove('hidden');
+  
+  // Always scroll to the top
+  modalContent.scrollTop = 0;
+}
+
 </script>
 
   <h1>ID Card Generator</h1>
@@ -573,18 +617,8 @@ footer {
 </div>
 </div>
 
-<script>
-  function showForm() {
-    document.getElementById("introScreen").style.display = "none";
-    document.getElementById("formScreen").style.display = "block";
 
-    // ✅ Smooth scroll to top
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  }
-</script>
+
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -1973,15 +2007,19 @@ document.getElementById("newIDBtn").onclick = () => {
 
   // Scroll to top smoothly
   function showForm() {
-    document.getElementById("introScreen").style.display = "none";
-    document.getElementById("formScreen").style.display = "block";
+  document.getElementById("introScreen").style.display = "none";
+  document.getElementById("formScreen").style.display = "block";
 
-    // ✅ Smooth scroll to top
+  // Scroll to the top of the form screen
+  const formSection = document.getElementById("formSection");
+  if (formSection) {
     window.scrollTo({
-      top: 0,
+      top: formSection.offsetTop - 20,
       behavior: "smooth"
     });
   }
+}
+
 
   // Show form section and hide intro if hidden
   document.getElementById("formSection").classList.remove("hidden");
