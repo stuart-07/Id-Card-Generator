@@ -348,6 +348,83 @@ select {
   outline: none;
 }
 
+footer {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #666;
+  padding: 30px 15px;
+  line-height: 1.8;
+  border-top: 1px solid #ccc;
+  background-color: #f9f9f9; /* Optional for a subtle contrast */
+}
+.site-footer {
+  margin-top: 40px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #666;
+  padding: 30px 15px;
+  line-height: 1.6;
+  border-top: 1px solid #ccc;
+  background-color: #f9f9f9;
+}
+
+.site-footer div {
+  margin-bottom: 12px;
+}
+
+.footer-license {
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.footer-contact {
+  color: #005fa3;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.footer-contact:hover {
+  text-decoration: underline;
+}
+
+.footer-contact-sep {
+  margin: 0 8px;
+  display: inline;
+}
+
+
+
+.auth-letter-container {
+  margin-top: 30px;
+  padding: 16px 10px;
+  text-align: center;
+  background-color: #f9fbff;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+
+.auth-letter-container button {
+  margin-top: 12px;
+  background: linear-gradient(to right, #0077cc, #005fa3);
+  color: white;
+  padding: 14px 28px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.auth-letter-container button:hover {
+  background: linear-gradient(to right, #005fa3, #004080);
+  transform: translateY(-2px);
+}
+.hidden {
+  display: none !important;
+}
+
+
 @media (max-width: 480px) {
   .container {
     margin: 20px 15px;
@@ -377,32 +454,118 @@ select {
   margin-bottom: 20px;
 }
 
-footer {
-  margin-top: 40px;
-  text-align: center;
-  font-size: 0.85rem;
-  color: #777;
-  padding: 20px 10px;
-  border-top: 1px solid #ccc;
-}
+.site-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
+  .footer-middle {
+    max-width: 700px;
+    text-align: center;
+  }
+
+  .footer-license {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .footer-contact-sep {
+    display: inline;
+  }
 
 
   </style>
 </head>
 <body>
+
+  <div id="termsModal" class="hidden" style="
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+">
+  <div style="
+    background: white;
+    max-width: 600px;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    position: relative;
+  ">
+    <h2 style="margin-top: 0;">Terms and Conditions</h2>
+
+<p>
+  This platform is a <strong>volunteer-based, non-commercial initiative</strong> developed by a student to improve safety awareness and emergency preparedness for students.
+  It is <strong>not affiliated with any educational institution, organization, or government authority</strong>, and does not claim to represent any official body.
+</p>
+
+<ul style="margin-top: 10px;">
+  <li>All data is generated and stored locally in your browser only.</li>
+  <li>No data is collected, saved, or transmitted to any server at any time.</li>
+  <li>This website does <strong>not use cookies, tracking scripts, analytics, or third-party services</strong>.</li>
+  <li>ID cards generated are unofficial and meant strictly for personal identification purposes.</li>
+  <li>Users are solely responsible for the accuracy and truthfulness of the information they provide.</li>
+  <li>Printing shops are advised to verify ID cards visually and are <strong>not liable for misuse or false information</strong> presented by users.</li>
+</ul>
+
+<p>
+  By using this tool, you acknowledge and agree that the developer is <strong>not liable for any direct or indirect damages, misuse, misrepresentation, or consequences</strong> arising from the use of this platform or the ID cards it generates.
+</p>
+
+<p>
+  This tool is provided <strong>"as-is" without any warranties</strong>, express or implied. Use is entirely at your own risk.
+</p>
+<p style="margin-top: 20px; font-size: 0.85rem; color: #555;">
+  This project and its contents are licensed under the 
+  <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener noreferrer">
+    Creative Commons Attribution–NonCommercial–NoDerivatives 4.0 International License
+  </a>.
+</p>
+
+
+    <button onclick="closeTermsModal()" style="
+      margin-top: 20px;
+      background-color: #004080;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    ">Close</button>
+  </div>
+</div>
+<script>
+  function showTermsModal() {
+    document.getElementById("termsModal").classList.remove("hidden");
+  }
+
+  function closeTermsModal() {
+    document.getElementById("termsModal").classList.add("hidden");
+  }
+</script>
+
   <h1>ID Card Generator</h1>
 <div id="intro" class="centered">
   <div class="container">
     <h1>ID Card Creator</h1>
 <p>
-  This website helps you generate a digital ID card containing your vital information along with a scannable QR code. In emergencies, scanning the QR code can quickly provide essential details to first responders, potentially saving time and lives. The ID card includes your photo, full name, institution, date of birth, blood group, and emergency contact information — all securely embedded within the QR code for easy access.<br><br>
+  This website is part of a <strong>non-commercial, volunteer-based project created by a student</strong> to enhance student safety during emergencies. It helps you generate a digital ID card containing vital information, including a scannable QR code. In critical situations, scanning this QR code can give first responders immediate access to emergency contacts, blood group, and essential identity details potentially saving lives.<br><br>
 
-  Built using modern HTML5 and web technologies, this tool ensures a seamless and user-friendly experience without requiring any downloads or installations. <strong>Your data stays entirely on your device</strong> and is only encoded into the QR code locally, providing a safe and private way to carry your emergency information wherever you go.<br><br>
+  Built using modern HTML5 and web technologies, this tool offers a fast, secure, and installation-free experience. <strong>Your data remains fully private and is never stored or transmitted</strong>. Everything is processed locally in your browser, no servers, no database, and no personal tracking.<br><br>
 
-   <strong>We respect your privacy:</strong> No personal information is stored, transmitted, or accessed externally. There is absolutely <strong>no database or server-side processing</strong> involved — everything happens within your browser. Once the page is closed, all entered data is gone. You are fully in control of your information at all times.<br><br>
+  <strong>Privacy first:</strong> All information disappears once the page is closed. Nothing is saved externally. You are entirely in control of your data.<br><br>
 
-   <strong>Note:</strong> The generated ID card strictly follows the standard <strong>CR80 (3.375 x 2.125 inches)</strong> format, which is the same size as most credit cards and student IDs. This ensures compatibility with common plastic card printers and holders.
+  <strong>ID Format:</strong> The ID card follows the industry-standard <strong>CR80 size (3.375 x 2.125 inches)</strong>, ensuring it fits standard plastic ID card printers and holders.<br><br>
+
+  For legal details, usage terms, and responsibilities, please read our
+  <a href="#" onclick="showTermsModal()" style="color: #005fa3; text-decoration: underline;">Terms and Conditions</a>.
 </p>
 
 
@@ -424,24 +587,90 @@ footer {
 </script>
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  async function generateGeneralPrintAuthorization() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('en-US', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    const year = new Date().getFullYear();
+
+const lines = [
+  `Date: ${formattedDate}`,
+  ``,
+  `Subject: Kindly Allow Printing of Student ID Cards from Instant ID Card Generator`,
+  ``,
+  `To whom it may concern,`,
+  ``,
+  `We respectfully request your support in printing an ID card for the student presenting this letter.`,
+  ``,
+  `The student is using the "Instant ID Card Generator" – a free, non-commercial,`,
+  `volunteer-driven web tool created to help students carry emergency contact and`,
+  `blood group information with them at all times.`,
+  ``,
+  `This initiative is not affiliated with any school, college, or government authority.`,
+  `It was created solely out of social concern to help save lives and improve student safety,`,
+  `especially during unforeseen emergencies.`,
+  ``,
+  `These ID cards are unofficial and do not include any institutional seals, signatures,`,
+  `or logos. They are meant only for personal identification and do not replace any official card.`,
+  ``,
+  `We kindly ask that you allow any student with this letter to print their ID card on paper`,
+  `or plastic, without requiring institutional approval. This printing is for personal use only.`,
+  `Please note, the student accepts full responsibility for the information on the card.`,
+  ``,
+  `This letter is not intended to imply any verification or institutional authorization`,
+  `from schools or government bodies.`,
+  ``,
+  `We deeply appreciate your understanding, cooperation, and support in helping students stay safe.`,
+  ``,
+  `Sincerely,`,
+  `Instant ID Card Project Team`,
+  `https://instantidcard.vercel.app`,
+  `© ${year} Instant ID Card – All Rights Reserved`,
+  `This project is licensed under the Creative Commons Attribution–NonCommercial–NoDerivatives 4.0 International License.`,
+`https://creativecommons.org/licenses/by-nc-nd/4.0/`
+
+];
+
+
+
+    let y = 20;
+    doc.setFont("Helvetica", "normal");
+    doc.setFontSize(12);
+
+    lines.forEach(line => {
+      doc.text(line, 20, y);
+      y += 8;
+    });
+
+    doc.save(`print_authorization_letter.pdf`);
+  }
+</script>
+
 
 <div id="formSection" class="container hidden">
   <h2>Enter Your Information</h2>
 
   <div class="form-group">
   <label for="name">Full Name <span style="color: red;">*</span></label>
-  <input type="text" id="name" maxlength="30" placeholder="Enter full name (max 30 characters)" required />
+  <input type="text" id="name" maxlength="30" autocomplete="off" placeholder="Enter full name (max 30 characters)" required />
   <small id="nameCount">0/30</small>
 </div>
 
   <div class="form-group">
     <label for="dob">Date of Birth <span style="color: red;">*</span></label>
-    <input type="date" id="dob" required />
+    <input type="date" id="dob" autocomplete="off" required />
   </div>
 
   <div class="form-group">
   <label for="institution">Institution Name <span style="color: red;">*</span></label>
-  <input type="text" id="institution" maxlength="42" placeholder="Enter institution (max 40 characters)" required />
+  <input type="text" id="institution" maxlength="42" autocomplete="off" placeholder="Enter institution (max 40 characters)" required />
   <small id="instCount">0/40</small>
 </div>
 
@@ -655,7 +884,7 @@ footer {
     <label>Father's Number <span style="color: red;">*</span></label>
     <div class="row">
       <select id="fatherCode" class="country-code">${countryOptions}</select>
-      <input type="tel" id="father" placeholder="Father's Phone Number (required)" required />
+      <input type="tel" id="father" autocomplete="off" placeholder="Father's Phone Number (required)" required />
     </div>
   </div>
 
@@ -663,7 +892,7 @@ footer {
     <label>Mother's Number <span style="color: red;">*</span></label>
     <div class="row">
       <select id="motherCode" class="country-code">${countryOptions}</select>
-      <input type="tel" id="mother" placeholder="Mother's Phone Number (required)" required />
+      <input type="tel" id="mother" autocomplete="off" placeholder="Mother's Phone Number (required)" required />
     </div>
   </div>
 
@@ -671,7 +900,7 @@ footer {
     <label>Brother's Number</label>
     <div class="row">
       <select id="brotherCode" class="country-code">${countryOptions}</select>
-      <input type="tel" id="brother" placeholder="Brother's Phone Number (optional)" />
+      <input type="tel" id="brother" autocomplete="off" placeholder="Brother's Phone Number (optional)" />
     </div>
   </div>
 
@@ -679,7 +908,7 @@ footer {
     <label>Sister's Number</label>
     <div class="row">
       <select id="sisterCode" class="country-code">${countryOptions}</select>
-      <input type="tel" id="sister" placeholder="Sister's Phone Number (optional)" />
+      <input type="tel" id="sister" autocomplete="off" placeholder="Sister's Phone Number (optional)" />
     </div>
   </div>
 
@@ -687,7 +916,7 @@ footer {
     <label>Uncle's Number</label>
     <div class="row">
       <select id="uncleCode" class="country-code">${countryOptions}</select>
-      <input type="tel" id="uncle" placeholder="Uncle's Phone Number (optional)" />
+      <input type="tel" id="uncle" autocomplete="off" placeholder="Uncle's Phone Number (optional)" />
     </div>
   </div>
 
@@ -695,12 +924,12 @@ footer {
     <label>Aunty's Number</label>
     <div class="row">
       <select id="auntyCode" class="country-code">${countryOptions}</select>
-      <input type="tel" id="aunty" placeholder="Aunty's Phone Number (optional)" />
+      <input type="tel" id="aunty" autocomplete="off" placeholder="Aunty's Phone Number (optional)" />
     </div>
   </div>
 <div class="form-group">
   <label for="address">Address <span style="color: red;">*</span></label>
-  <textarea id="address" rows="3" maxlength="60" placeholder="e.g., Brooklyn, New York 11201, USA" required></textarea>
+<textarea id="address" rows="3" maxlength="60" autocomplete="off" placeholder="e.g., City, State, ZIP (avoid exact house/road)" required></textarea>
   <small id="addressCount">0/60</small>
   <small style="color: #666; display: block; margin-top: 5px;">
     For privacy and safety, please provide only general location details such as <strong>area, city, state, and postal code</strong>. Avoid including specific identifiers like <strong>house numbers, road names, or building names</strong>, as this information may be visible to others if the ID is scanned.
@@ -774,6 +1003,8 @@ footer {
   </ul>
 </div>
 
+
+
 <style>
 @keyframes fadeIn {
   0% {
@@ -787,17 +1018,47 @@ footer {
 }
 </style>
 
-  
-<footer>
-  &copy; <span id="yearRange"></span> | This tool is intended solely for generating ID cards for emergency use.<br>
-  Not affiliated with any official organization or institution.
+<div class="auth-letter-container">
+  <p style="text-align: center; font-size: 14px; color: #444; margin-bottom: 10px;">
+    Some print shops may require permission to print ID cards. Click below to download an official letter.
+  </p>
+  <button onclick="generateGeneralPrintAuthorization()">
+    Download Authorization Letter for Print Shops
+  </button>
+
+</div>
+
+
+
+<footer class="site-footer">
+  <div class="footer-top">
+    &copy; <span id="yearRange"></span> <strong>Instant ID Card</strong> – A volunteer-based, non-commercial safety tool built by a student.
+  </div>
+
+  <div class="footer-middle">
+    This tool is intended solely for generating ID cards for emergency use.  
+    Not affiliated with any official organization, institution, or government authority.  
+    All content is for informational and personal use only.
+  </div>
+
+  <div class="footer-license">
+    Licensed under 
+    <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" rel="noopener noreferrer">
+      CC BY-NC-ND 4.0
+    </a>.
+    <span class="footer-contact-sep">|</span>
+    <a href="mailto:stuartzoakim@gmail.com" class="footer-contact">Contact</a>
+  </div>
 </footer>
 
+
+
+
 <script>
+  const yearSpan = document.getElementById("yearRange");
   const startYear = 2025;
   const currentYear = new Date().getFullYear();
-  document.getElementById("yearRange").textContent = 
-    startYear === currentYear ? `${startYear}` : `${startYear}–${currentYear}`;
+  yearSpan.textContent = startYear === currentYear ? startYear : `${startYear}–${currentYear}`;
 </script>
 
 
@@ -1036,6 +1297,7 @@ footer {
   <option value="+260">🇿🇲 +260</option>
   <option value="+263">🇿🇼 +263</option>
 `;
+
 
   function addContactRow(idPrefix) {
   const labels = {
@@ -2020,4 +2282,5 @@ document.getElementById("output").classList.remove("hidden");
 </script>
 
 </body>
+
 </html>
